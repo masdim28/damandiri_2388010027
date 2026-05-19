@@ -47,11 +47,15 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USERNAME }} # <- Sudah disamakan
+          username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
-          source: "./web-dinamis/docker-compose.yml,web-dinamis/db_data/dbcompro_2388010027.sql"
-          target: "/home/ubuntu/container-dinamis"    
+          # Diubah menggunakan tanda pipa (|) dan ditulis per baris tanpa tanda petik
+          source: |
+            web-dinamis/docker-compose.yml
+            web-dinamis/db_data/dbcompro_2388010027.sql
+          target: "/home/ubuntu/container-dinamis"
+          strip_components: 1 # Opsional: Agar folder 'web-dinamis' tidak ikut terbuat di server, melainkan langsung file di dalamnya
 
       - name: Deploy Web Dinamis via SSH and run docker compose
         uses: appleboy/ssh-action@master
