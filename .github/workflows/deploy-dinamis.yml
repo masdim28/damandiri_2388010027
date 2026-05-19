@@ -67,5 +67,6 @@ jobs:
           script: |
             # Masuk ke dalam sub-folder tempat docker-compose.yml Anda mendarat
             cd /home/ubuntu/container-dinamis/web-dinamis
+            export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
             docker compose pull
             docker compose up -d
