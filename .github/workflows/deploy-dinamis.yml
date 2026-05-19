@@ -1,9 +1,8 @@
 name: Deploy Web Dinamis to AWS EC2
 
-
 on:
   push:
-    branches: [ main]
+    branches: [ main ]
     paths: 
       - 'web-dinamis/**'
       - '.github/workflows/deploy-dinamis.yml'
@@ -11,21 +10,23 @@ on:
 jobs:
   build-and-deploy-web-dinamis:
     runs-on: ubuntu-latest
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: build and push Docker image
-      uses: docker/build-push-action@v5.3.0
-      with:
-      context: ./web-dinamis
-      file: ./Dockerfile
-      push: true
-      tags: ${{ secrets.DOCKERHUB_USERNAME }}/web-dinamis_2388010027:latest
+    steps: # <- Di sini baris 15 tadi, sekarang sudah maju sejajar dengan runs-on
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: build and push Docker image
+        uses: docker/build-push-action@v5.3.0
+        with: # <- Spasi di bawah ini sudah dirapikan agar masuk ke dalam 'with'
+          context: ./web-dinamis
+          file: ./web-dinamis/Dockerfile # Periksa kembali jalur file Dockerfile Anda jika ada di dalam folder
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/web-dinamis_2388010027:latest
       
   deploy-to-ec2:
     runs-on: ubuntu-latest
@@ -39,8 +40,10 @@ jobs:
           key: ${{ secrets.AWS_PRIVAATE_KEY }}
           port: 22
           script: |
-            docker rm -f/home/ubuntu/container-dinamis/database
-            docker rm -f/home/ubuntu/container-dinamis/web-dinamis
+            # Ditambahkan spasi setelah flag -f agar perintah docker tidak error
+            docker rm -f /home/ubuntu/container-dinamis/database 
+            docker rm -f /home/ubuntu/container-dinamis/web-dinamis
+
       - name: Copy Compose file EC2 via SCP 
         uses: appleboy/scp-action@master
         with:
@@ -62,4 +65,3 @@ jobs:
             cd /home/ubuntu/container-dinamis
             docker compose pull
             docker compose up -d
-
