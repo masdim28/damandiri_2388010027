@@ -32,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-deploy-web-dinamis
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy to EC2 via SSH and run docker compose
         uses: appleboy/ssh-action@v1.0.3
         with:
