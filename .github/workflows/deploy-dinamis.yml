@@ -37,7 +37,7 @@ jobs:
         with:
           host: ${{ secrets.AWS_HOST }}
           username: ${{ secrets.AWS_USER }}
-          key: ${{ secrets.AWS_PRIVAATE_KEY }}
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           script: |
             # Ditambahkan spasi setelah flag -f agar perintah docker tidak error
