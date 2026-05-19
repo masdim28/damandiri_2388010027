@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-deploy-web-dinamis:
     runs-on: ubuntu-latest
-    steps: # <- Di sini baris 15 tadi, sekarang sudah maju sejajar dengan runs-on
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -22,9 +22,9 @@ jobs:
 
       - name: build and push Docker image
         uses: docker/build-push-action@v5.3.0
-        with: # <- Spasi di bawah ini sudah dirapikan agar masuk ke dalam 'with'
+        with:
           context: ./web-dinamis
-          file: ./web-dinamis/Dockerfile # Periksa kembali jalur file Dockerfile Anda jika ada di dalam folder
+          file: ./web-dinamis/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/web-dinamis_2388010027:latest
       
@@ -36,20 +36,19 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USER }}
+          username: ${{ secrets.AWS_USERNAME }} # <- Sudah disamakan
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           script: |
-            # Ditambahkan spasi setelah flag -f agar perintah docker tidak error
-            docker rm -f /home/ubuntu/container-dinamis/database 
-            docker rm -f /home/ubuntu/container-dinamis/web-dinamis
+            docker rm -f /home/ubuntu/container-dinamis/database || true
+            docker rm -f /home/ubuntu/container-dinamis/web-dinamis || true
 
       - name: Copy Compose file EC2 via SCP 
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USERNAME }}
-          key: ${{ secrets.AWS_PRIVAATE_KEY }}
+          username: ${{ secrets.AWS_USERNAME }} # <- Sudah disamakan
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           source: "./web-dinamis/docker-compose.yml,web-dinamis/db_data/dbcompro_2388010027.sql"
           target: "/home/ubuntu/container-dinamis"    
@@ -58,8 +57,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USERNAME }}
-          key: ${{ secrets.AWS_PRIVAATE_KEY }}
+          username: ${{ secrets.AWS_USERNAME }} # <- Sudah disamakan
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           script: |
             cd /home/ubuntu/container-dinamis
