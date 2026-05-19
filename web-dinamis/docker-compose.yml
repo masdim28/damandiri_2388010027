@@ -14,11 +14,6 @@ services:
       - ./db_data/dbcompro_2388010027.sql:/docker-entrypoint-initdb.d/dbcompro_2388010027.sql:ro
     restart: always
     
-  container-statis:
-    image: ${DOCKERHUB_USERNAME}/damandiri_2388010027:latest
-    ports:
-     - "80:80"
-    restart: always
 
   container-dinamis:
     image: ${DOCKERHUB_USERNAME}/web-dinamis_2388010027:latest

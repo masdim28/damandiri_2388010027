@@ -69,4 +69,4 @@ jobs:
             cd /home/ubuntu/container-dinamis/web-dinamis
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
             docker compose pull
-            docker compose up -d
+            docker compose up -d --remove-orphans
