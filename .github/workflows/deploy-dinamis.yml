@@ -50,11 +50,12 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
-          # Jalur source disesuaikan dengan struktur folder asli Anda di VS Code
+          # Menggunakan double wildcard (**) agar dicari otomatis di folder mana pun
           source: |
-            docker-compose.yml
-            web-dinamis/db_data/dbcompro_2388010027.sql
+            **/docker-compose.yml
+            **/dbcompro_2388010027.sql
           target: "/home/ubuntu/container-dinamis"
+          strip_components: 3 # Ditambahkan ini agar struktur folder bawaannya dilepas saat ditaruh di target
 
       - name: Deploy Web Dinamis via SSH and run docker compose
         uses: appleboy/ssh-action@master
