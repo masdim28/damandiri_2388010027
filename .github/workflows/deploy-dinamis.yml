@@ -59,12 +59,13 @@ jobs:
 
       - name: Deploy Web Dinamis via SSH and run docker compose
         uses: appleboy/ssh-action@master
-        with: 
+        with:
           host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USERNAME }} # <- Sudah disamakan
+          username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/container-dinamis
+            # Masuk ke dalam sub-folder tempat docker-compose.yml Anda mendarat
+            cd /home/ubuntu/container-dinamis/web-dinamis
             docker compose pull
             docker compose up -d
